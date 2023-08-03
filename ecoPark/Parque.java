@@ -4,6 +4,7 @@ public class Parque {
 
     // Molinetes
     private static final int cantMolinetes = 5;
+    private static int molinetesDisponibles = cantMolinetes;
     private static Semaphore molinetes = new Semaphore(cantMolinetes, true);
     // Restaurantes
     private static final int cantRestaurantes = 3;
@@ -15,14 +16,21 @@ public class Parque {
         }
     }
 
-    public void cruzarMolinete() {
+    public void buscarMolinete() {
         try {
-            // Toma 1 segundo para cruzar el molinete
             molinetes.acquire(1);
-            Thread.sleep(1000);
-            molinetes.release(1);
+            molinetesDisponibles--;
         } catch (Exception e) {
         }
+    }
+
+    public void dejarMolinete() {
+        molinetesDisponibles++;
+        molinetes.release(1);
+    }
+
+    public int getMolinetesDisponibles() {
+        return molinetesDisponibles;
     }
 
     public int getCantRestaurantes() {

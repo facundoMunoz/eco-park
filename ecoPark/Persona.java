@@ -1,19 +1,36 @@
+import java.awt.Color;
+import java.awt.Point;
+
 public class Persona extends Thread {
 
     private int id;
     private Parque parque;
+    // GUI
+    private GUI gui;
+    private Point posActual;
+    private String estado = "Listo";
+    // Colores
+    private static final Color COLOR_ACTIVO = new Color(94, 240, 88);
+    private static final Color COLOR_ESPERA = new Color(245, 170, 82);
+    private Color colorActual = COLOR_ESPERA;
 
-    public Persona(int id, Parque parque) {
-        this.id = id;
-        this.parque = parque;
+    public Persona(int newId, Parque newParque, GUI newGui) {
+        id = newId;
+        parque = newParque;
+        gui = newGui;
+        posActual = new Point((int) (Math.random() * 1000), GUI.POS_INICIAL.y);
     }
 
     public void run() {
-        // Entra al parque
-        parque.cruzarMolinete();
-        System.out.println(id + " entra al parque");
-        // Decide dónde ir
-        irRestaurante();
+        // Entra
+        entrarParque();
+    }
+    
+    private void entrarParque() {
+        parque.buscarMolinete();
+        colorActual = COLOR_ACTIVO;
+        caminarHacia(GUI.POS_MOLINETES);
+        parque.dejarMolinete();
     }
 
     private void irRestaurante() {
@@ -21,9 +38,52 @@ public class Persona extends Thread {
             Restaurante[] restaurantes = parque.getRestaurantes();
             int opcionRestaurante = ((int) (Math.random() * 10)) % parque.getCantRestaurantes();
             restaurantes[opcionRestaurante].pedirComida(this.id);
+            // Comer
             Thread.sleep(4000);
         } catch (Exception e) {
         }
+    }
+
+    private void irFaro() {
+        try {
+            Thread.sleep(4000);
+        } catch (Exception e) {
+        }
+    }
+
+    private void caminarHacia(Point posNueva) {
+        int movX;
+        int movY;
+        try {
+            while (posActual.x != posNueva.x || posActual.y != posNueva.y) {
+                if (posActual.x != posNueva.x) {
+                    movX = (posActual.x > posNueva.x) ? -1 : 1;
+                    posActual = new Point(posActual.x + movX, posActual.y);
+                }
+                if (posActual.y != posNueva.y) {
+                    movY = (posActual.y > posNueva.y) ? -1 : 1;
+                    posActual = new Point(posActual.x, posActual.y + movY);
+                }
+                Thread.sleep((int) (Math.random() * 100));
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public int getPosX() {
+        return posActual.x;
+    }
+
+    public int getPosY() {
+        return posActual.y;
+    }
+
+    public Color getColor() {
+        return colorActual;
+    }
+
+    public String getLabel() {
+        return id + " " + estado;
     }
 
 }
