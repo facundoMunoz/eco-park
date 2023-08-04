@@ -9,6 +9,8 @@ public class Parque {
     // Restaurantes
     private static final int cantRestaurantes = 3;
     private static Restaurante[] restaurantes = new Restaurante[cantRestaurantes];
+    // Faro
+    private static Faro faro = new Faro();
 
     public Parque() {
         for (int nroRestaurante = 0; nroRestaurante < restaurantes.length; nroRestaurante++) {
@@ -39,6 +41,10 @@ public class Parque {
 
     public Restaurante[] getRestaurantes() {
         return restaurantes;
+    }
+
+    public Faro getFaro() {
+        return faro;
     }
 
 }

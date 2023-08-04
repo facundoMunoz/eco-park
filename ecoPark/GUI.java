@@ -17,6 +17,7 @@ public class GUI extends JPanel {
     // Colores
     private static final Color COLOR_FONDO = new Color(240, 236, 199);
     private static final Color COLOR_ACTIVIDAD = new Color(209, 203, 148);
+    private static final Color COLOR_ELEMENTO = new Color(145, 141, 100);
     private static final Color COLOR_TEXTO = new Color(40, 40, 40);
     // Posiciones
     private static final int WIDTH = 960;
@@ -60,9 +61,9 @@ public class GUI extends JPanel {
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(0, HEIGHT - 140, WIDTH, 70);
         g.setColor(COLOR_TEXTO);
-        g.drawString("Molinetes: " + parque.getMolinetesDisponibles(), 0, HEIGHT - 125);
-        g.setColor(Color.RED);
-        g.fillOval((int) POS_MOLINETES.getX(), (int) POS_MOLINETES.getY(), 5, 5);
+        g.drawString("Molinetes disponibles: " + parque.getMolinetesDisponibles(), 0, HEIGHT - 125);
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) POS_MOLINETES.getX(), (int) POS_MOLINETES.getY(), 10, 10);
     }
 
     private void pintarPersonas(Graphics g) {

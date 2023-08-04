@@ -8,7 +8,7 @@ public class Persona extends Thread {
     // GUI
     private GUI gui;
     private Point posActual;
-    private String estado = "Listo";
+    private String estado = "Espera";
     // Colores
     private static final Color COLOR_ACTIVO = new Color(94, 240, 88);
     private static final Color COLOR_ESPERA = new Color(245, 170, 82);
@@ -18,25 +18,26 @@ public class Persona extends Thread {
         id = newId;
         parque = newParque;
         gui = newGui;
-        posActual = new Point((int) (Math.random() * 1000), GUI.POS_INICIAL.y);
+        posActual = new Point((int) (Math.random() * 800), GUI.POS_INICIAL.y);
     }
 
     public void run() {
         // Entra
         entrarParque();
     }
-    
+
     private void entrarParque() {
         parque.buscarMolinete();
+        estado = "Entra";
         colorActual = COLOR_ACTIVO;
         caminarHacia(GUI.POS_MOLINETES);
         parque.dejarMolinete();
     }
 
     private void irRestaurante() {
+        Restaurante[] restaurantes = parque.getRestaurantes();
+        int opcionRestaurante = ((int) (Math.random() * 10)) % parque.getCantRestaurantes();
         try {
-            Restaurante[] restaurantes = parque.getRestaurantes();
-            int opcionRestaurante = ((int) (Math.random() * 10)) % parque.getCantRestaurantes();
             restaurantes[opcionRestaurante].pedirComida(this.id);
             // Comer
             Thread.sleep(4000);
@@ -45,8 +46,15 @@ public class Persona extends Thread {
     }
 
     private void irFaro() {
+        Faro faro = parque.getFaro();
+        int toboganUsado;
         try {
-            Thread.sleep(4000);
+            // TODO: caminar hacia entrada faro
+            faro.subirEscaleras();
+            // TODO: caminar hacia el administrador
+            toboganUsado = faro.tirarseTobogan();
+            // TODO: caminar hacia la salida
+            faro.dejarTobogan(toboganUsado);
         } catch (Exception e) {
         }
     }
