@@ -14,7 +14,8 @@ public class Faro {
         }
     }
 
-    public synchronized void subirEscaleras() {
+    // Escaleras
+    public synchronized void esperarEscaleras() {
         try {
             while (cantPersonasEscalera == MAX_PERSONAS_ESCALERA)
                 this.wait();
@@ -28,7 +29,8 @@ public class Faro {
         this.notifyAll();
     }
 
-    public synchronized int tirarseTobogan() {
+    // Toboganes
+    public synchronized int esperarTobogan() {
         int toboganUsado = -1;
         try {
             while (siguienteTobogan == -1) {

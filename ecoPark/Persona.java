@@ -27,7 +27,7 @@ public class Persona extends Thread {
     }
 
     private void entrarParque() {
-        parque.buscarMolinete();
+        parque.esperarMolinete();
         estado = "Entra";
         colorActual = COLOR_ACTIVO;
         caminarHacia(GUI.POS_MOLINETES);
@@ -50,11 +50,28 @@ public class Persona extends Thread {
         int toboganUsado;
         try {
             // TODO: caminar hacia entrada faro
-            faro.subirEscaleras();
+            faro.esperarEscaleras();
             // TODO: caminar hacia el administrador
-            toboganUsado = faro.tirarseTobogan();
+            toboganUsado = faro.esperarTobogan();
             // TODO: caminar hacia la salida
             faro.dejarTobogan(toboganUsado);
+        } catch (Exception e) {
+        }
+    }
+
+    private void irShop() {
+        Shop shop = parque.getShop();
+        try {
+            // TODO: caminar hacia shop
+            // Elige qué comprar
+            sleep((int) (Math.random() * 1000));
+            // TODO: caminar fila caja
+            shop.esperarCaja();
+            // TODO: caminar a la caja
+            // Paga en caja
+            sleep((int) (Math.random() * 1000));
+            shop.dejarCaja();
+            // TODO: caminar hacia la salida
         } catch (Exception e) {
         }
     }

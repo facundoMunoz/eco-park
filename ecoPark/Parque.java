@@ -11,6 +11,8 @@ public class Parque {
     private static Restaurante[] restaurantes = new Restaurante[cantRestaurantes];
     // Faro
     private static Faro faro = new Faro();
+    // Shop
+    private static Shop shop = new Shop();
 
     public Parque() {
         for (int nroRestaurante = 0; nroRestaurante < restaurantes.length; nroRestaurante++) {
@@ -18,7 +20,8 @@ public class Parque {
         }
     }
 
-    public void buscarMolinete() {
+    // Molitenes
+    public void esperarMolinete() {
         try {
             molinetes.acquire(1);
             molinetesDisponibles--;
@@ -35,6 +38,7 @@ public class Parque {
         return molinetesDisponibles;
     }
 
+    // Restaurantes
     public int getCantRestaurantes() {
         return cantRestaurantes;
     }
@@ -43,8 +47,14 @@ public class Parque {
         return restaurantes;
     }
 
+    // Faro
     public Faro getFaro() {
         return faro;
+    }
+
+    // Shop
+    public Shop getShop() {
+        return shop;
     }
 
 }
