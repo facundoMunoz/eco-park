@@ -9,6 +9,7 @@ public class Persona extends Thread {
     private GUI gui;
     private Point posActual;
     private String estado = "Espera";
+    private boolean visible = true;
     // Colores
     private static final Color COLOR_ACTIVO = new Color(94, 240, 88);
     private static final Color COLOR_ESPERA = new Color(245, 170, 82);
@@ -76,6 +77,18 @@ public class Persona extends Thread {
         }
     }
 
+    private void irCarreraGomones() {
+        CarreraGomones carrera = parque.getCarreraGomones();
+        try {
+            // TODO: caminar hacia elección transporte
+            // TODO: elegir transporte e ir al inicio
+            carrera.esperarLargada();
+            // TODO: ir al final de la carrera
+            // TODO: reiniciar CyclicBarrier ?
+        } catch (Exception e) {
+        }
+    }
+
     private void caminarHacia(Point posNueva) {
         int movX;
         int movY;
@@ -109,6 +122,10 @@ public class Persona extends Thread {
 
     public String getLabel() {
         return id + " " + estado;
+    }
+
+    public boolean getVisible() {
+        return visible;
     }
 
 }

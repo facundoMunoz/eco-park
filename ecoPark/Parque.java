@@ -11,6 +11,8 @@ public class Parque {
     private static Restaurante[] restaurantes = new Restaurante[cantRestaurantes];
     // Faro
     private static Faro faro = new Faro();
+    // Carrera gomones
+    private static CarreraGomones carrera = new CarreraGomones();
     // Shop
     private static Shop shop = new Shop();
 
@@ -50,6 +52,11 @@ public class Parque {
     // Faro
     public Faro getFaro() {
         return faro;
+    }
+
+    // Carrera
+    public CarreraGomones getCarreraGomones() {
+        return carrera;
     }
 
     // Shop
