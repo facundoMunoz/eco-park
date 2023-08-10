@@ -21,11 +21,12 @@ public class GUI extends JPanel {
     private static final Color COLOR_TEXTO = new Color(40, 40, 40);
     // Posiciones
     private static final int WIDTH = 960;
-    private static final int WIDTH_ACTIVIDADES = 320;
     private static final int HEIGHT = 720;
-    private static final int HEIGHT_ACTIVIDADES = 200;
+    public static final int WIDTH_ACTIVIDADES = 320;
+    public static final int HEIGHT_ACTIVIDADES = 200;
     public static final Point POS_INICIAL = new Point(WIDTH / 2, HEIGHT - 50);
     public static final Point POS_MOLINETES = new Point(WIDTH / 2, HEIGHT - 110);
+    public static final Point POS_CENTRO = new Point(WIDTH / 2, HEIGHT / 2);
 
     public GUI() {
         setDoubleBuffered(true);
@@ -59,34 +60,85 @@ public class GUI extends JPanel {
 
     private void pintarActividades(Graphics g) {
         g.setFont(new Font(labelReloj.getFont().getName(), Font.BOLD, 15));
+        // Entrada al parque
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) POS_INICIAL.getX(), (int) POS_INICIAL.getY(), 10, 10);
+        // Centro del parque
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) POS_CENTRO.getX(), (int) POS_CENTRO.getY(), 10, 10);
         // Molinetes
+        pintarMolinetes(g);
+        // Restaurantes
+        pintarRestaurantes(g);
+        // Faro
+        pintarFaro(g);
+        // Shop
+        pintarShop(g);
+        // Carrera
+        pintarCarrera(g);
+        // Snorkel
+        pintarSnorkel(g);
+    }
+
+    private void pintarMolinetes(Graphics g) {
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(0, HEIGHT - 140, WIDTH, 70);
         g.setColor(COLOR_TEXTO);
         g.drawString("Molinetes disponibles: " + parque.getMolinetesDisponibles(), 0, HEIGHT - 125);
         g.setColor(COLOR_ELEMENTO);
         g.fillOval((int) POS_MOLINETES.getX(), (int) POS_MOLINETES.getY(), 10, 10);
-        // Restaurantes
+    }
+
+    private void pintarRestaurantes(Graphics g) {
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(0, 75, WIDTH_ACTIVIDADES, HEIGHT_ACTIVIDADES);
         g.setColor(COLOR_TEXTO);
         g.drawString("Restaurante", 0, 90);
-        // Faro
+    }
+
+    private void pintarFaro(Graphics g) {
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(0, 325, WIDTH_ACTIVIDADES, HEIGHT_ACTIVIDADES);
         g.setColor(COLOR_TEXTO);
         g.drawString("Faro-Mirador", 0, 340);
-        // Shop
+    }
+
+    private void pintarShop(Graphics g) {
+        Shop shop = parque.getShop();
+
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(WIDTH_ACTIVIDADES + 5, 75, WIDTH_ACTIVIDADES - 10, HEIGHT_ACTIVIDADES);
         g.setColor(COLOR_TEXTO);
         g.drawString("Shop", WIDTH_ACTIVIDADES + 5, 90);
-        // Carrera
+        // Entrada
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Shop.POS_ENTRADA.getX(), (int) Shop.POS_ENTRADA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Entrada", (int) Shop.POS_ENTRADA.getX() - 25, (int) Shop.POS_ENTRADA.getY() - 15);
+        // Shop
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Shop.POS_SHOP.getX(), (int) Shop.POS_SHOP.getY(), 10, 10);
+        // Fila
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Shop.POS_FILA.getX(), (int) Shop.POS_FILA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Fila", (int) Shop.POS_FILA.getX() - 10, (int) Shop.POS_FILA.getY() - 15);
+        // Caja
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Shop.POS_CAJAS.getX(), (int) Shop.POS_CAJAS.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Cajas " + shop.getCantCajasDisponibles() + "/" + shop.getMaxCajas(),
+                (int) Shop.POS_CAJAS.getX() - 25, (int) Shop.POS_CAJAS.getY() - 15);
+    }
+
+    private void pintarCarrera(Graphics g) {
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(WIDTH_ACTIVIDADES * 2, 75, WIDTH_ACTIVIDADES, HEIGHT_ACTIVIDADES);
         g.setColor(COLOR_TEXTO);
         g.drawString("Carrera de gomones", WIDTH_ACTIVIDADES * 2, 90);
-        // Snorkel
+    }
+
+    private void pintarSnorkel(Graphics g) {
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(WIDTH_ACTIVIDADES * 2, 325, WIDTH_ACTIVIDADES, HEIGHT_ACTIVIDADES);
         g.setColor(COLOR_TEXTO);
@@ -102,7 +154,7 @@ public class GUI extends JPanel {
             // Label
             g.setColor(GUI.COLOR_TEXTO);
             g.drawOval(persona.getPosX(), persona.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
-            // Texto 5 píxeles debajo de la persona
+            // Texto 5 píxeles arriba de la persona
             g.drawString(persona.getLabel(), persona.getPosX() - 10, persona.getPosY() - 5);
         }
     }

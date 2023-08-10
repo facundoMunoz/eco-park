@@ -25,14 +25,25 @@ public class Persona extends Thread {
     public void run() {
         // Entra
         entrarParque();
+        // Visita parque
+        // TODO: while en horario parque
+        while (true)
+            decidirActividad();
     }
 
     private void entrarParque() {
+        caminarHacia(GUI.POS_INICIAL);
         parque.esperarMolinete();
         estado = "Entra";
         colorActual = COLOR_ACTIVO;
         caminarHacia(GUI.POS_MOLINETES);
         parque.dejarMolinete();
+    }
+
+    private void decidirActividad() {
+        caminarHacia(GUI.POS_CENTRO);
+        // TODO: switch actividad
+        irShop();
     }
 
     private void irRestaurante() {
@@ -63,16 +74,17 @@ public class Persona extends Thread {
     private void irShop() {
         Shop shop = parque.getShop();
         try {
-            // TODO: caminar hacia shop
+            caminarHacia(Shop.POS_ENTRADA);
+            caminarHacia(Shop.POS_SHOP);
             // Elige qué comprar
-            sleep((int) (Math.random() * 1000));
-            // TODO: caminar fila caja
+            sleep((int) (Math.random() * 10000));
+            caminarHacia(Shop.POS_FILA);
             shop.esperarCaja();
-            // TODO: caminar a la caja
+            caminarHacia(Shop.POS_CAJAS);
             // Paga en caja
-            sleep((int) (Math.random() * 1000));
+            sleep((int) (Math.random() * 8000));
             shop.dejarCaja();
-            // TODO: caminar hacia la salida
+            caminarHacia(Shop.POS_ENTRADA);
         } catch (Exception e) {
         }
     }
