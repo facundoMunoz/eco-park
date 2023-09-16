@@ -7,7 +7,7 @@ public class GUI extends JPanel {
     // GUI
     private static JLabel labelReloj = new JLabel();
     // Reloj
-    private static int hora = 7;
+    private static int hora = 12;
     private static int minutos = 0;
     // Elementos
     Parque parque = new Parque();
@@ -90,17 +90,64 @@ public class GUI extends JPanel {
     }
 
     private void pintarRestaurantes(Graphics g) {
+        Restaurante[] restaurantes = parque.getRestaurantes();
+
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(0, 75, WIDTH_ACTIVIDADES, HEIGHT_ACTIVIDADES);
         g.setColor(COLOR_TEXTO);
-        g.drawString("Restaurante", 0, 90);
+        g.drawString("Restaurantes", 0, 90);
+        // Pintar cada restaurante
+        for (int restaurante = 0; restaurante < restaurantes.length; restaurante++) {
+            g.setColor(COLOR_ELEMENTO);
+            g.fillOval((int) restaurantes[restaurante].POS_MESAS.getX(),
+                    (int) restaurantes[restaurante].POS_MESAS.getY(),
+                    10, 10);
+            g.fillOval((int) restaurantes[restaurante].POS_FILA.getX(), (int) restaurantes[restaurante].POS_FILA.getY(),
+                    10, 10);
+            g.setColor(COLOR_TEXTO);
+            g.drawString("" + restaurante, (int) restaurantes[restaurante].POS_MESAS.getX(),
+                    (int) restaurantes[restaurante].POS_MESAS.getY() - 20);
+        }
     }
 
     private void pintarFaro(Graphics g) {
+        Faro faro = parque.getFaro();
+
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(0, 325, WIDTH_ACTIVIDADES, HEIGHT_ACTIVIDADES);
         g.setColor(COLOR_TEXTO);
         g.drawString("Faro-Mirador", 0, 340);
+        // Entrada
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Faro.POS_ENTRADA.getX(), (int) Faro.POS_ENTRADA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Entrada", (int) Faro.POS_ENTRADA.getX() - 25, (int) Faro.POS_ENTRADA.getY() - 15);
+        // Salida
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Faro.POS_SALIDA.getX(), (int) Faro.POS_SALIDA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Salida", (int) Faro.POS_SALIDA.getX() - 20, (int) Faro.POS_SALIDA.getY() - 15);
+        // Escaleras
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Faro.POS_ESCALERAS.getX(), (int) Faro.POS_ESCALERAS.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Escalera (" + faro.getCantPersonasEscalera() + "/" + Faro.MAX_PERSONAS_ESCALERA + ")",
+                (int) Faro.POS_ESCALERAS.getX() - 44, (int) Faro.POS_ESCALERAS.getY() - 15);
+        // Cima
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Faro.POS_CIMA.getX(), (int) Faro.POS_CIMA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Cima", (int) Faro.POS_CIMA.getX() - 20, (int) Faro.POS_CIMA.getY() - 15);
+        // Tobogan 1
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Faro.POS_TOBOGAN_1.getX(), (int) Faro.POS_TOBOGAN_1.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Tobogán 1", (int) Faro.POS_TOBOGAN_1.getX() - 24, (int) Faro.POS_TOBOGAN_1.getY() - 15);
+        // Tobogan 2
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Faro.POS_TOBOGAN_2.getX(), (int) Faro.POS_TOBOGAN_2.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Tobogán 2", (int) Faro.POS_TOBOGAN_2.getX() - 24, (int) Faro.POS_TOBOGAN_2.getY() - 15);
     }
 
     private void pintarShop(Graphics g) {
@@ -114,7 +161,7 @@ public class GUI extends JPanel {
         g.setColor(COLOR_ELEMENTO);
         g.fillOval((int) Shop.POS_ENTRADA.getX(), (int) Shop.POS_ENTRADA.getY(), 10, 10);
         g.setColor(COLOR_TEXTO);
-        g.drawString("Entrada", (int) Shop.POS_ENTRADA.getX() - 25, (int) Shop.POS_ENTRADA.getY() - 15);
+        g.drawString("Entrada", (int) Shop.POS_ENTRADA.getX() - 25, (int) Shop.POS_ENTRADA.getY() - 20);
         // Shop
         g.setColor(COLOR_ELEMENTO);
         g.fillOval((int) Shop.POS_SHOP.getX(), (int) Shop.POS_SHOP.getY(), 10, 10);
@@ -122,13 +169,13 @@ public class GUI extends JPanel {
         g.setColor(COLOR_ELEMENTO);
         g.fillOval((int) Shop.POS_FILA.getX(), (int) Shop.POS_FILA.getY(), 10, 10);
         g.setColor(COLOR_TEXTO);
-        g.drawString("Fila", (int) Shop.POS_FILA.getX() - 10, (int) Shop.POS_FILA.getY() - 15);
+        g.drawString("Fila", (int) Shop.POS_FILA.getX() - 10, (int) Shop.POS_FILA.getY() - 20);
         // Caja
         g.setColor(COLOR_ELEMENTO);
         g.fillOval((int) Shop.POS_CAJAS.getX(), (int) Shop.POS_CAJAS.getY(), 10, 10);
         g.setColor(COLOR_TEXTO);
         g.drawString("Cajas " + shop.getCantCajasDisponibles() + "/" + shop.getMaxCajas(),
-                (int) Shop.POS_CAJAS.getX() - 25, (int) Shop.POS_CAJAS.getY() - 15);
+                (int) Shop.POS_CAJAS.getX() - 25, (int) Shop.POS_CAJAS.getY() - 20);
     }
 
     private void pintarCarrera(Graphics g) {
@@ -154,9 +201,13 @@ public class GUI extends JPanel {
             // Label
             g.setColor(GUI.COLOR_TEXTO);
             g.drawOval(persona.getPosX(), persona.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
-            // Texto 5 píxeles arriba de la persona
-            g.drawString(persona.getLabel(), persona.getPosX() - 10, persona.getPosY() - 5);
+            // Número 2 píxeles arriba de la persona
+            g.drawString(persona.getLabel(), persona.getPosX() + 4, persona.getPosY() - 2);
         }
+    }
+
+    public static int getHora() {
+        return hora;
     }
 
     public static void main(String[] args) {

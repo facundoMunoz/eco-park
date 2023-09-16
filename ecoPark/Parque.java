@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.concurrent.Semaphore;
 
 public class Parque {
@@ -18,7 +19,11 @@ public class Parque {
 
     public Parque() {
         for (int nroRestaurante = 0; nroRestaurante < restaurantes.length; nroRestaurante++) {
-            restaurantes[nroRestaurante] = new Restaurante(nroRestaurante);
+            restaurantes[nroRestaurante] = new Restaurante(nroRestaurante, new Point(50 + (nroRestaurante * 100), 240),
+                    new Point(50 + (nroRestaurante * 100), 150));
+            // Asignamos un cocinero a cada restaurante
+            Cocinero cocinero = new Cocinero(restaurantes[nroRestaurante]);
+            cocinero.start();
         }
     }
 

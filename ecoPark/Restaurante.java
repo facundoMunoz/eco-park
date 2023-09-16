@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.concurrent.locks.*;
 
 public class Restaurante {
@@ -7,9 +8,14 @@ public class Restaurante {
     private Lock lock = new ReentrantLock(true);
     private Condition esperarComida = lock.newCondition();
     private Condition esperarPedido = lock.newCondition();
+    // Posicion
+    public final Point POS_FILA;
+    public final Point POS_MESAS;
 
-    public Restaurante(int nroRestaurante) {
+    public Restaurante(int nroRestaurante, Point posFila, Point posMesas) {
         this.nroRestaurante = nroRestaurante;
+        this.POS_FILA = posFila;
+        this.POS_MESAS = posMesas;
     }
 
     public int getNroRestaurante() {
@@ -21,11 +27,9 @@ public class Restaurante {
             lock.lock();
             // Avisa al cocinero
             esperarPedido.signal();
-            System.out.println(idCliente + " avisa cocinero, restaurante " + nroRestaurante);
             clientesEsperando++;
             // Espera
             esperarComida.await();
-            System.out.println(idCliente + " recibe comida, restaurante " + nroRestaurante);
         } catch (Exception e) {
         } finally {
             lock.unlock();
@@ -36,12 +40,10 @@ public class Restaurante {
         try {
             lock.lock();
             if (clientesEsperando == 0) {
-                System.out.println("Cocinero espera, restaurante " + nroRestaurante);
                 esperarPedido.await();
             }
             // Hay cliente esperando
-            System.out.println("Cocinero cocina, restaurante " + nroRestaurante);
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             // Entrega la comida
             esperarComida.signal();
             clientesEsperando--;

@@ -8,12 +8,14 @@ public class Persona extends Thread {
     // GUI
     private GUI gui;
     private Point posActual;
-    private String estado = "Espera";
     private boolean visible = true;
     // Colores
     private static final Color COLOR_ACTIVO = new Color(94, 240, 88);
     private static final Color COLOR_ESPERA = new Color(245, 170, 82);
-    private Color colorActual = COLOR_ESPERA;
+    private Color colorActual = COLOR_ACTIVO;
+    // Tickets restaurantes
+    private boolean almuerza = true;
+    private boolean merienda = true;
 
     public Persona(int newId, Parque newParque, GUI newGui) {
         id = newId;
@@ -23,37 +25,59 @@ public class Persona extends Thread {
     }
 
     public void run() {
+        int hora = GUI.getHora();
+
         // Entra
         entrarParque();
         // Visita parque
-        // TODO: while en horario parque
-        while (true)
+        while (hora < 18)
             decidirActividad();
+
+        // TODO: dejar parque
     }
 
     private void entrarParque() {
         caminarHacia(GUI.POS_INICIAL);
+        colorActual = COLOR_ESPERA;
         parque.esperarMolinete();
-        estado = "Entra";
         colorActual = COLOR_ACTIVO;
         caminarHacia(GUI.POS_MOLINETES);
         parque.dejarMolinete();
     }
 
     private void decidirActividad() {
+        // Va al centro del parque para decidir donde ir
         caminarHacia(GUI.POS_CENTRO);
-        // TODO: switch actividad
-        irShop();
+        switch (((int) (Math.random() * 10)) % 3) {
+            case 0:
+                irRestaurante();
+                break;
+            case 1:
+                irFaro();
+                break;
+            default:
+                irShop();
+                break;
+        }
     }
 
     private void irRestaurante() {
-        Restaurante[] restaurantes = parque.getRestaurantes();
-        int opcionRestaurante = ((int) (Math.random() * 10)) % parque.getCantRestaurantes();
-        try {
-            restaurantes[opcionRestaurante].pedirComida(this.id);
-            // Comer
-            Thread.sleep(4000);
-        } catch (Exception e) {
+        // Si es horario de almuerzo/merienda y tiene un ticket
+        int hora = GUI.getHora();
+        if ((hora > 11 && hora < 14 && almuerza) || (hora > 14 && merienda)) {
+            Restaurante[] restaurantes = parque.getRestaurantes();
+            int opcionRestaurante = ((int) (Math.random() * 10)) % parque.getCantRestaurantes();
+
+            try {
+                caminarHacia(restaurantes[opcionRestaurante].POS_FILA);
+                colorActual = COLOR_ESPERA;
+                restaurantes[opcionRestaurante].pedirComida(this.id);
+                colorActual = COLOR_ACTIVO;
+                caminarHacia(restaurantes[opcionRestaurante].POS_MESAS);
+                // Comer
+                Thread.sleep(5000);
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -61,12 +85,17 @@ public class Persona extends Thread {
         Faro faro = parque.getFaro();
         int toboganUsado;
         try {
-            // TODO: caminar hacia entrada faro
+            caminarHacia(Faro.POS_ENTRADA);
+            colorActual = COLOR_ESPERA;
             faro.esperarEscaleras();
-            // TODO: caminar hacia el administrador
+            caminarHacia(Faro.POS_ESCALERAS);
+            sleep(2000);
+            caminarHacia(Faro.POS_CIMA);
+            faro.dejarEscaleras();
             toboganUsado = faro.esperarTobogan();
-            // TODO: caminar hacia la salida
+            caminarHacia(faro.getPosTobogan(toboganUsado));
             faro.dejarTobogan(toboganUsado);
+            caminarHacia(Faro.POS_SALIDA);
         } catch (Exception e) {
         }
     }
@@ -79,7 +108,9 @@ public class Persona extends Thread {
             // Elige qué comprar
             sleep((int) (Math.random() * 10000));
             caminarHacia(Shop.POS_FILA);
+            colorActual = COLOR_ESPERA;
             shop.esperarCaja();
+            colorActual = COLOR_ACTIVO;
             caminarHacia(Shop.POS_CAJAS);
             // Paga en caja
             sleep((int) (Math.random() * 8000));
@@ -133,7 +164,7 @@ public class Persona extends Thread {
     }
 
     public String getLabel() {
-        return id + " " + estado;
+        return "" + id;
     }
 
     public boolean getVisible() {
