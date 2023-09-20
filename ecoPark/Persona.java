@@ -88,11 +88,14 @@ public class Persona extends Thread {
             caminarHacia(Faro.POS_ENTRADA);
             colorActual = COLOR_ESPERA;
             faro.esperarEscaleras();
+            colorActual = COLOR_ACTIVO;
             caminarHacia(Faro.POS_ESCALERAS);
             sleep(2000);
             caminarHacia(Faro.POS_CIMA);
             faro.dejarEscaleras();
+            colorActual = COLOR_ESPERA;
             toboganUsado = faro.esperarTobogan();
+            colorActual = COLOR_ACTIVO;
             caminarHacia(faro.getPosTobogan(toboganUsado));
             faro.dejarTobogan(toboganUsado);
             caminarHacia(Faro.POS_SALIDA);

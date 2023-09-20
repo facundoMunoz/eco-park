@@ -18,6 +18,7 @@ public class Parque {
     private static Shop shop = new Shop();
 
     public Parque() {
+        AdministradorFaro adminFaro = new AdministradorFaro(this);
         for (int nroRestaurante = 0; nroRestaurante < restaurantes.length; nroRestaurante++) {
             restaurantes[nroRestaurante] = new Restaurante(nroRestaurante, new Point(50 + (nroRestaurante * 100), 240),
                     new Point(50 + (nroRestaurante * 100), 150));
@@ -25,6 +26,7 @@ public class Parque {
             Cocinero cocinero = new Cocinero(restaurantes[nroRestaurante]);
             cocinero.start();
         }
+        adminFaro.start();
     }
 
     // Molitenes
