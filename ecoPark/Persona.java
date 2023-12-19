@@ -6,7 +6,6 @@ public class Persona extends Thread {
     private int id;
     private Parque parque;
     // GUI
-    private GUI gui;
     private Point posActual;
     private boolean visible = true;
     // Colores
@@ -20,20 +19,18 @@ public class Persona extends Thread {
     public Persona(int newId, Parque newParque, GUI newGui) {
         id = newId;
         parque = newParque;
-        gui = newGui;
         posActual = new Point((int) (Math.random() * 800), GUI.POS_INICIAL.y);
     }
 
     public void run() {
-        int hora = GUI.getHora();
-
         // Entra
         entrarParque();
         // Visita parque
-        while (hora < 18)
+        while (GUI.getHora() < 18)
             decidirActividad();
-
-        // TODO: dejar parque
+        // Salen del parque
+        caminarHacia(GUI.POS_CENTRO);
+        caminarHacia(GUI.POS_INICIAL);
     }
 
     private void entrarParque() {
@@ -48,15 +45,18 @@ public class Persona extends Thread {
     private void decidirActividad() {
         // Va al centro del parque para decidir donde ir
         caminarHacia(GUI.POS_CENTRO);
-        switch (((int) (Math.random() * 10)) % 3) {
+        switch (((int) (Math.random() * 10)) % 4) {
             case 0:
                 irRestaurante();
                 break;
             case 1:
                 irFaro();
                 break;
-            default:
+            case 2:
                 irShop();
+                break;
+            default:
+                irCarreraGomones();
                 break;
         }
     }
@@ -125,12 +125,28 @@ public class Persona extends Thread {
 
     private void irCarreraGomones() {
         CarreraGomones carrera = parque.getCarreraGomones();
+        int decisionTransporte;
         try {
-            // TODO: caminar hacia elección transporte
-            // TODO: elegir transporte e ir al inicio
+            caminarHacia(CarreraGomones.POS_ENTRADA);
+            decisionTransporte = (int) ((Math.random() * 10) % 2);
+            if (decisionTransporte == 0) {
+                caminarHacia(CarreraGomones.POS_BICIS);
+            } else {
+                caminarHacia(CarreraGomones.POS_TREN);
+                colorActual = COLOR_ESPERA;
+                carrera.subirTren();
+                carrera.bajarTren();
+                colorActual = COLOR_ACTIVO;
+            }
+            caminarHacia(CarreraGomones.POS_INICIO);
+            colorActual = COLOR_ESPERA;
             carrera.esperarLargada();
-            // TODO: ir al final de la carrera
-            // TODO: reiniciar CyclicBarrier ?
+            colorActual = COLOR_ACTIVO;
+            caminarHacia(CarreraGomones.POS_LLEGADA);
+            // Recupera pertenencias
+            carrera.recuperarPertenencias();
+            Thread.sleep((int) (Math.random() * 1000));
+            caminarHacia(CarreraGomones.POS_SALIDA);
         } catch (Exception e) {
         }
     }

@@ -13,7 +13,7 @@ public class GUI extends JPanel {
     Parque parque = new Parque();
     // Hilos
     private static final int TAM_PERSONAS = 20;
-    private static Persona[] personas = new Persona[10];
+    private static Persona[] personas = new Persona[30];
     // Colores
     private static final Color COLOR_FONDO = new Color(240, 236, 199);
     private static final Color COLOR_ACTIVIDAD = new Color(209, 203, 148);
@@ -179,10 +179,50 @@ public class GUI extends JPanel {
     }
 
     private void pintarCarrera(Graphics g) {
+        CarreraGomones carrera = parque.getCarreraGomones();
+
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(WIDTH_ACTIVIDADES * 2, 75, WIDTH_ACTIVIDADES, HEIGHT_ACTIVIDADES);
         g.setColor(COLOR_TEXTO);
         g.drawString("Carrera de gomones", WIDTH_ACTIVIDADES * 2, 90);
+        // Entrada
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) CarreraGomones.POS_ENTRADA.getX(), (int) CarreraGomones.POS_ENTRADA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Entrada", (int) CarreraGomones.POS_ENTRADA.getX() - 25,
+                (int) CarreraGomones.POS_ENTRADA.getY() - 20);
+        // Stand bicis
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) CarreraGomones.POS_BICIS.getX(), (int) CarreraGomones.POS_BICIS.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Bicis", (int) CarreraGomones.POS_BICIS.getX() - 16,
+                (int) CarreraGomones.POS_BICIS.getY() - 20);
+        // Tren
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) CarreraGomones.POS_TREN.getX(), (int) CarreraGomones.POS_TREN.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Tren (" + carrera.getCantPersonasTren() + "/" + CarreraGomones.MAX_PERSONAS_TREN + ")",
+                (int) CarreraGomones.POS_TREN.getX() - 35,
+                (int) CarreraGomones.POS_TREN.getY() - 20);
+        // Inicio
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) CarreraGomones.POS_INICIO.getX(), (int) CarreraGomones.POS_INICIO.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Inicio (" + carrera.getEsperandoCarrera() + "/" + CarreraGomones.GOMONES_NECESARIOS + ")",
+                (int) CarreraGomones.POS_INICIO.getX() - 16,
+                (int) CarreraGomones.POS_INICIO.getY() - 20);
+        // Llegada
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) CarreraGomones.POS_LLEGADA.getX(), (int) CarreraGomones.POS_LLEGADA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Llegada", (int) CarreraGomones.POS_LLEGADA.getX() - 25,
+                (int) CarreraGomones.POS_LLEGADA.getY() - 20);
+        // Salida
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) CarreraGomones.POS_SALIDA.getX(), (int) CarreraGomones.POS_SALIDA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Salida", (int) CarreraGomones.POS_SALIDA.getX() - 16,
+                (int) CarreraGomones.POS_SALIDA.getY() - 20);
     }
 
     private void pintarSnorkel(Graphics g) {
@@ -214,7 +254,7 @@ public class GUI extends JPanel {
         JFrame frame = new JFrame("Parque ECO-PCS");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setMinimumSize(new Dimension(960, 720));
+        frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
         frame.setResizable(false);
         frame.setVisible(true);
         frame.add(new GUI(), BorderLayout.CENTER);
