@@ -13,7 +13,7 @@ public class GUI extends JPanel {
     Parque parque = new Parque();
     // Hilos
     private static final int TAM_PERSONAS = 20;
-    private static Persona[] personas = new Persona[30];
+    private static Persona[] personas = new Persona[50];
     // Colores
     private static final Color COLOR_FONDO = new Color(240, 236, 199);
     private static final Color COLOR_ACTIVIDAD = new Color(209, 203, 148);
@@ -105,7 +105,7 @@ public class GUI extends JPanel {
             g.fillOval((int) restaurantes[restaurante].POS_FILA.getX(), (int) restaurantes[restaurante].POS_FILA.getY(),
                     10, 10);
             g.setColor(COLOR_TEXTO);
-            g.drawString("" + restaurante, (int) restaurantes[restaurante].POS_MESAS.getX(),
+            g.drawString("" + (restaurante + 1), (int) restaurantes[restaurante].POS_MESAS.getX(),
                     (int) restaurantes[restaurante].POS_MESAS.getY() - 20);
         }
     }
@@ -263,18 +263,9 @@ public class GUI extends JPanel {
             @Override
             protected Void doInBackground() throws Exception {
                 String horaActual;
-
                 while (true) {
-                    // 800 ms corresponden a 1 minuto del parque
-                    Thread.sleep(800);
-                    minutos += 1;
-                    if (minutos > 59) {
-                        hora++;
-                        minutos = 0;
-                        if (hora > 23) {
-                            hora = 0;
-                        }
-                    }
+                    Thread.sleep(1);
+
                     horaActual = (minutos > 9) ? hora + ":" + minutos : hora + ":0" + minutos;
                     publish(horaActual);
                 }
@@ -290,5 +281,20 @@ public class GUI extends JPanel {
             }
         };
         workerReloj.execute();
+        try {
+            while (true) {
+                // 800 ms corresponden a 1 minuto del parque
+                Thread.sleep(800);
+                minutos += 1;
+                if (minutos > 59) {
+                    hora++;
+                    minutos = 0;
+                    if (hora > 23) {
+                        hora = 0;
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
     }
 }

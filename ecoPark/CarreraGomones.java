@@ -1,5 +1,6 @@
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.awt.Point;
 
 public class CarreraGomones {
@@ -22,13 +23,16 @@ public class CarreraGomones {
     public static final Point POS_LLEGADA = new Point(GUI.WIDTH_ACTIVIDADES + 580, 135);
     public static final Point POS_SALIDA = new Point(GUI.WIDTH_ACTIVIDADES + 580, 250);
 
-    public void esperarLargada() {
+    public boolean esperarLargada() {
         try {
             // Deja pertenencias
             bolsosPertenencias.acquire(1);
             dejarPertenencias();
-            largada.await();
+            largada.await(180, TimeUnit.SECONDS);
+            return true;
         } catch (Exception e) {
+            largada.reset();
+            return false;
         }
     }
 
@@ -43,12 +47,15 @@ public class CarreraGomones {
     }
 
     // Tren
-    public void subirTren() {
+    public boolean subirTren() {
         try {
             asientosTren.acquire(1);
             sumarPersonasTren();
-            viajarTren.await();
+            viajarTren.await(120, TimeUnit.SECONDS);
+            return true;
         } catch (Exception e) {
+            viajarTren.reset();
+            return false;
         }
     }
 

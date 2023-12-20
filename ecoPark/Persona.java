@@ -125,6 +125,7 @@ public class Persona extends Thread {
 
     private void irCarreraGomones() {
         CarreraGomones carrera = parque.getCarreraGomones();
+        boolean siguiente = true;
         int decisionTransporte;
         try {
             caminarHacia(CarreraGomones.POS_ENTRADA);
@@ -134,19 +135,24 @@ public class Persona extends Thread {
             } else {
                 caminarHacia(CarreraGomones.POS_TREN);
                 colorActual = COLOR_ESPERA;
-                carrera.subirTren();
+                siguiente = carrera.subirTren();
                 carrera.bajarTren();
                 colorActual = COLOR_ACTIVO;
             }
-            caminarHacia(CarreraGomones.POS_INICIO);
-            colorActual = COLOR_ESPERA;
-            carrera.esperarLargada();
-            colorActual = COLOR_ACTIVO;
-            caminarHacia(CarreraGomones.POS_LLEGADA);
-            // Recupera pertenencias
-            carrera.recuperarPertenencias();
-            Thread.sleep((int) (Math.random() * 1000));
-            caminarHacia(CarreraGomones.POS_SALIDA);
+            if (siguiente) {
+                caminarHacia(CarreraGomones.POS_INICIO);
+                colorActual = COLOR_ESPERA;
+                siguiente = carrera.esperarLargada();
+                colorActual = COLOR_ACTIVO;
+                if (siguiente) {
+                    caminarHacia(CarreraGomones.POS_LLEGADA);
+                    Thread.sleep((int) (Math.random() * 1000));
+                    caminarHacia(CarreraGomones.POS_SALIDA);
+                }
+                // Recupera pertenencias
+                carrera.recuperarPertenencias();
+            }
+            caminarHacia(CarreraGomones.POS_ENTRADA);
         } catch (Exception e) {
         }
     }
@@ -164,7 +170,7 @@ public class Persona extends Thread {
                     movY = (posActual.y > posNueva.y) ? -1 : 1;
                     posActual = new Point(posActual.x, posActual.y + movY);
                 }
-                Thread.sleep((int) (Math.random() * 100));
+                Thread.sleep((int) (Math.random() * 50));
             }
         } catch (Exception e) {
         }
