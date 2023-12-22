@@ -10,8 +10,8 @@ public class CarreraGomones {
     private final int ASIENTOS_TREN = 15;
     private CyclicBarrier largada = new CyclicBarrier(GOMONES_NECESARIOS);
     private CyclicBarrier viajarTren = new CyclicBarrier(ASIENTOS_TREN);
-    private Semaphore bolsosPertenencias = new Semaphore(GOMONES_NECESARIOS, true);
-    private Semaphore asientosTren = new Semaphore(ASIENTOS_TREN, true);
+    private Semaphore bolsoPertenencias = new Semaphore(GOMONES_NECESARIOS, true);
+    private Semaphore asientoTren = new Semaphore(ASIENTOS_TREN, true);
     // Tren
     private int personasTren = 0;
     public static final int MAX_PERSONAS_TREN = 15;
@@ -26,7 +26,7 @@ public class CarreraGomones {
     public boolean esperarLargada() {
         try {
             // Deja pertenencias
-            bolsosPertenencias.acquire(1);
+            bolsoPertenencias.acquire(1);
             dejarPertenencias();
             largada.await(180, TimeUnit.SECONDS);
             return true;
@@ -43,13 +43,13 @@ public class CarreraGomones {
 
     public synchronized void recuperarPertenencias() {
         gomonesOcupados--;
-        bolsosPertenencias.release(1);
+        bolsoPertenencias.release(1);
     }
 
     // Tren
     public boolean subirTren() {
         try {
-            asientosTren.acquire(1);
+            asientoTren.acquire(1);
             sumarPersonasTren();
             viajarTren.await(120, TimeUnit.SECONDS);
             return true;
@@ -65,7 +65,7 @@ public class CarreraGomones {
 
     public synchronized void bajarTren() {
         personasTren--;
-        asientosTren.release(1);
+        asientoTren.release(1);
     }
 
     public synchronized int getCantPersonasTren() {

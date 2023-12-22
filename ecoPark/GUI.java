@@ -13,7 +13,7 @@ public class GUI extends JPanel {
     Parque parque = new Parque();
     // Hilos
     private static final int TAM_PERSONAS = 20;
-    private static Persona[] personas = new Persona[50];
+    private static Persona[] personas = new Persona[80];
     // Colores
     private static final Color COLOR_FONDO = new Color(240, 236, 199);
     private static final Color COLOR_ACTIVIDAD = new Color(209, 203, 148);
@@ -226,10 +226,29 @@ public class GUI extends JPanel {
     }
 
     private void pintarSnorkel(Graphics g) {
+        Snorkel snorkel = parque.getSnorkel();
+
         g.setColor(COLOR_ACTIVIDAD);
         g.fillRect(WIDTH_ACTIVIDADES * 2, 325, WIDTH_ACTIVIDADES, HEIGHT_ACTIVIDADES);
         g.setColor(COLOR_TEXTO);
         g.drawString("Snorkel", WIDTH_ACTIVIDADES * 2, 340);
+
+        // Entrada
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Snorkel.POS_ENTRADA.getX(), (int) Snorkel.POS_ENTRADA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Entrada", (int) Snorkel.POS_ENTRADA.getX() - 25, (int) Snorkel.POS_ENTRADA.getY() - 20);
+        // Snorkel
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Snorkel.POS_SNORKEL.getX(), (int) Snorkel.POS_SNORKEL.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Laguna " + snorkel.getCantPersonasEscalera() + "/" + snorkel.MAX_EQUIPOS_SNORKEL,
+                (int) Snorkel.POS_SNORKEL.getX() - 25, (int) Snorkel.POS_SNORKEL.getY() - 20);
+        // Salida
+        g.setColor(COLOR_ELEMENTO);
+        g.fillOval((int) Snorkel.POS_SALIDA.getX(), (int) Snorkel.POS_SALIDA.getY(), 10, 10);
+        g.setColor(COLOR_TEXTO);
+        g.drawString("Salida", (int) Snorkel.POS_SALIDA.getX() - 10, (int) Snorkel.POS_SALIDA.getY() - 20);
     }
 
     private void pintarPersonas(Graphics g) {

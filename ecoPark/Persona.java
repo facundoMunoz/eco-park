@@ -45,7 +45,7 @@ public class Persona extends Thread {
     private void decidirActividad() {
         // Va al centro del parque para decidir donde ir
         caminarHacia(GUI.POS_CENTRO);
-        switch (((int) (Math.random() * 10)) % 4) {
+        switch (((int) (Math.random() * 10)) % 5) {
             case 0:
                 irRestaurante();
                 break;
@@ -55,8 +55,11 @@ public class Persona extends Thread {
             case 2:
                 irShop();
                 break;
-            default:
+            case 4:
                 irCarreraGomones();
+                break;
+            default:
+                irSnorkel();
                 break;
         }
     }
@@ -153,6 +156,22 @@ public class Persona extends Thread {
                 carrera.recuperarPertenencias();
             }
             caminarHacia(CarreraGomones.POS_ENTRADA);
+        } catch (Exception e) {
+        }
+    }
+
+    private void irSnorkel() {
+        Snorkel snorkel = parque.getSnorkel();
+        int equipoUsado;
+        try {
+            caminarHacia(Snorkel.POS_ENTRADA);
+            colorActual = COLOR_ESPERA;
+            equipoUsado = snorkel.esperarEquipo();
+            colorActual = COLOR_ACTIVO;
+            caminarHacia(Snorkel.POS_SNORKEL);
+            Thread.sleep((int) (Math.random() * 3000));
+            caminarHacia(Snorkel.POS_SALIDA);
+            snorkel.dejarEquipo(equipoUsado);
         } catch (Exception e) {
         }
     }

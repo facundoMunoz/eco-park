@@ -16,9 +16,14 @@ public class Parque {
     private static CarreraGomones carrera = new CarreraGomones();
     // Shop
     private static Shop shop = new Shop();
+    // Snorkel
+    private static Snorkel snorkel = new Snorkel();
 
     public Parque() {
         AdministradorFaro adminFaro = new AdministradorFaro(this);
+        AsistenteSnorkel asisSnorkelUno = new AsistenteSnorkel(this);
+        AsistenteSnorkel asisSnorkelDos = new AsistenteSnorkel(this);
+
         for (int nroRestaurante = 0; nroRestaurante < restaurantes.length; nroRestaurante++) {
             restaurantes[nroRestaurante] = new Restaurante(nroRestaurante, new Point(50 + (nroRestaurante * 100), 240),
                     new Point(50 + (nroRestaurante * 100), 150));
@@ -27,6 +32,8 @@ public class Parque {
             cocinero.start();
         }
         adminFaro.start();
+        asisSnorkelUno.start();
+        asisSnorkelDos.start();
     }
 
     // Molitenes
@@ -69,6 +76,11 @@ public class Parque {
     // Shop
     public Shop getShop() {
         return shop;
+    }
+
+    // Snorkel
+    public Snorkel getSnorkel() {
+        return snorkel;
     }
 
 }
