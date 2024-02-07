@@ -149,6 +149,7 @@ public class Persona extends Thread {
                 colorActual = COLOR_ACTIVO;
                 if (siguiente) {
                     caminarHacia(CarreraGomones.POS_LLEGADA);
+                    carrera.cruzarMeta(this.id);
                     Thread.sleep((int) (Math.random() * 1000));
                     caminarHacia(CarreraGomones.POS_SALIDA);
                 }

@@ -242,7 +242,7 @@ public class GUI extends JPanel {
         g.setColor(COLOR_ELEMENTO);
         g.fillOval((int) Snorkel.POS_SNORKEL.getX(), (int) Snorkel.POS_SNORKEL.getY(), 10, 10);
         g.setColor(COLOR_TEXTO);
-        g.drawString("Laguna " + snorkel.getCantPersonasEscalera() + "/" + snorkel.MAX_EQUIPOS_SNORKEL,
+        g.drawString("Laguna " + snorkel.getCantPersonasEscalera() + "/" + Snorkel.MAX_EQUIPOS_SNORKEL,
                 (int) Snorkel.POS_SNORKEL.getX() - 25, (int) Snorkel.POS_SNORKEL.getY() - 20);
         // Salida
         g.setColor(COLOR_ELEMENTO);

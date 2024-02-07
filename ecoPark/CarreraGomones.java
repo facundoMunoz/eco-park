@@ -6,6 +6,7 @@ import java.awt.Point;
 public class CarreraGomones {
 
     private int gomonesOcupados = 0;
+    private boolean iniciada;
     public static final int GOMONES_NECESARIOS = 12;
     private final int ASIENTOS_TREN = 15;
     private CyclicBarrier largada = new CyclicBarrier(GOMONES_NECESARIOS);
@@ -29,6 +30,9 @@ public class CarreraGomones {
             bolsoPertenencias.acquire(1);
             dejarPertenencias();
             largada.await(180, TimeUnit.SECONDS);
+            if (!iniciada) {
+                iniciada = true;
+            }
             return true;
         } catch (Exception e) {
             largada.reset();
@@ -39,6 +43,13 @@ public class CarreraGomones {
     public synchronized void dejarPertenencias() {
         // Recibe gomón y deja pertenencias
         gomonesOcupados++;
+    }
+
+    public synchronized void cruzarMeta(int numeroVisitante) {
+        if (iniciada) {
+            System.out.println("¡" + numeroVisitante + " ganó la carrera!");
+            iniciada = false;
+        }
     }
 
     public synchronized void recuperarPertenencias() {
