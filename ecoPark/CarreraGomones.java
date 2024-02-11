@@ -29,7 +29,7 @@ public class CarreraGomones {
             // Deja pertenencias
             bolsoPertenencias.acquire(1);
             dejarPertenencias();
-            largada.await(180, TimeUnit.SECONDS);
+            largada.await(140, TimeUnit.SECONDS);
             if (!iniciada) {
                 iniciada = true;
             }

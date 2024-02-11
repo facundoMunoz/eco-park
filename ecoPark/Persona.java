@@ -45,7 +45,8 @@ public class Persona extends Thread {
     private void decidirActividad() {
         // Va al centro del parque para decidir donde ir
         caminarHacia(GUI.POS_CENTRO);
-        switch (((int) (Math.random() * 10)) % 5) {
+        //switch (((int) (Math.random() * 10)) % 5) {
+            switch (1) {
             case 0:
                 irRestaurante();
                 break;

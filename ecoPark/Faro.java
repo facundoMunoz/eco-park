@@ -1,7 +1,17 @@
 import java.awt.Point;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Faro {
 
+    // Lock escalera
+    private Lock lockEscalera = new ReentrantLock(true);
+    private Condition esperarEscalera = lockEscalera.newCondition();
+    // Lock toboganes
+    private Lock lock = new ReentrantLock(true);
+    private Condition esperarTobogan = lock.newCondition();
+    private Condition esperarVisitante = lock.newCondition();
     // Escalera
     private int cantPersonasEscalera = 0;
     public static final int MAX_PERSONAS_ESCALERA = 5;
@@ -24,54 +34,83 @@ public class Faro {
     }
 
     // Escaleras
-    public synchronized void esperarEscaleras() {
+    public void esperarEscaleras() {
         try {
-            while (cantPersonasEscalera == MAX_PERSONAS_ESCALERA) {
-                this.notifyAll();
-                this.wait();
+            lockEscalera.lock();
+            // Si la escalera está ocupada espera que alguien baje
+            if (cantPersonasEscalera == MAX_PERSONAS_ESCALERA) {
+                esperarEscalera.await();
             }
             cantPersonasEscalera++;
         } catch (Exception e) {
+        } finally {
+            lockEscalera.unlock();
         }
     }
 
-    public synchronized void dejarEscaleras() {
+    public void dejarEscaleras() {
+        lockEscalera.lock();
         cantPersonasEscalera--;
-        this.notifyAll();
+        // Avisa que dejó la escalera
+        esperarEscalera.signal();
+        lockEscalera.unlock();
     }
 
     // Toboganes
-    public synchronized int esperarTobogan() {
-        int toboganUsado = -1;
+    public int esperarTobogan() {
+        int toboganUsado = CANT_TOBOGANES;
         try {
-            while (siguienteTobogan == -1) {
-                this.notifyAll();
-                this.wait();
+            lock.lock();
+            if (siguienteTobogan == CANT_TOBOGANES) {
+                // Avisa al administrador para que revise
+                esperarVisitante.signal();
+                esperarTobogan.await();
             }
+            // El tobogan pasa a estar ocupado
             toboganes[siguienteTobogan] = false;
             toboganUsado = siguienteTobogan;
-            siguienteTobogan = -1;
-            this.notifyAll();
+            siguienteTobogan = CANT_TOBOGANES;
         } catch (Exception e) {
+        } finally {
+            lock.unlock();
         }
         return toboganUsado;
     }
 
-    public synchronized void dejarTobogan(int toboganUsado) {
-        toboganes[toboganUsado] = true;
-        this.notifyAll();
+    public void dejarTobogan(int toboganUsado) {
+        try {
+            lock.lock();
+            // El tobogan pasa a estar libre
+            toboganes[toboganUsado] = true;
+        } catch (Exception e) {
+        } finally {
+            // Avisa al administrador
+            esperarVisitante.signal();
+            lock.unlock();
+        }
     }
 
-    public synchronized void revisarToboganes() {
+    public void revisarToboganes() {
+        int toboganLibre = 0;
+        boolean existeLibre = false;
         try {
-            for (int tobogan = 0; tobogan < CANT_TOBOGANES; tobogan++) {
-                if (toboganes[tobogan]) {
-                    siguienteTobogan = tobogan;
+            lock.lock();
+            esperarVisitante.await();
+            // El administrador define cuál es el siguiente tobogan a usar
+            while (toboganLibre < CANT_TOBOGANES && !existeLibre) {
+                if (toboganes[toboganLibre]) {
+                    siguienteTobogan = toboganLibre;
+                    existeLibre = true;
+                } else {
+                    toboganLibre++;
                 }
             }
-            this.notifyAll();
-            this.wait();
         } catch (Exception e) {
+        } finally {
+            if (toboganLibre != CANT_TOBOGANES) {
+                esperarTobogan.signal();
+            }
+            lock.unlock();
         }
     }
 
