@@ -204,6 +204,11 @@ public class GUI extends JPanel {
         g.drawString("Tren (" + carrera.getCantPersonasTren() + "/" + CarreraGomones.MAX_PERSONAS_TREN + ")",
                 (int) CarreraGomones.POS_TREN.getX() - 35,
                 (int) CarreraGomones.POS_TREN.getY() - 20);
+        // Círculo del tren
+        g.setColor(TrenCarrera.COLOR_TREN);
+        g.fillOval(TrenCarrera.getPosX(), TrenCarrera.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
+        g.setColor(COLOR_TEXTO);
+        g.drawOval(TrenCarrera.getPosX(), TrenCarrera.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
         // Inicio
         g.setColor(COLOR_ELEMENTO);
         g.fillOval((int) CarreraGomones.POS_INICIO.getX(), (int) CarreraGomones.POS_INICIO.getY(), 10, 10);
@@ -254,14 +259,16 @@ public class GUI extends JPanel {
     private void pintarPersonas(Graphics g) {
         g.setFont(new Font(labelReloj.getFont().getName(), Font.PLAIN, 13));
         for (Persona persona : personas) {
-            // Círculo
-            g.setColor(persona.getColor());
-            g.fillOval(persona.getPosX(), persona.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
-            // Label
-            g.setColor(GUI.COLOR_TEXTO);
-            g.drawOval(persona.getPosX(), persona.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
-            // Número 2 píxeles arriba de la persona
-            g.drawString(persona.getLabel(), persona.getPosX() + 4, persona.getPosY() - 2);
+            if(persona.getVisible()) {
+                // Círculo
+                g.setColor(persona.getColor());
+                g.fillOval(persona.getPosX(), persona.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
+                // Label
+                g.setColor(GUI.COLOR_TEXTO);
+                g.drawOval(persona.getPosX(), persona.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
+                // Número 2 píxeles arriba de la persona
+                g.drawString(persona.getLabel(), persona.getPosX() + 4, persona.getPosY() - 2);
+            }
         }
     }
 

@@ -45,8 +45,7 @@ public class Persona extends Thread {
     private void decidirActividad() {
         // Va al centro del parque para decidir donde ir
         caminarHacia(GUI.POS_CENTRO);
-        //switch (((int) (Math.random() * 10)) % 5) {
-            switch (1) {
+        switch (((int) (Math.random() * 10)) % 5) {
             case 0:
                 irRestaurante();
                 break;
@@ -134,25 +133,32 @@ public class Persona extends Thread {
         try {
             caminarHacia(CarreraGomones.POS_ENTRADA);
             decisionTransporte = (int) ((Math.random() * 10) % 2);
+            decisionTransporte = 1;
             if (decisionTransporte == 0) {
                 caminarHacia(CarreraGomones.POS_BICIS);
+                caminarHacia(CarreraGomones.POS_INICIO);
             } else {
                 caminarHacia(CarreraGomones.POS_TREN);
-                colorActual = COLOR_ESPERA;
+                visible = false;
                 siguiente = carrera.subirTren();
                 carrera.bajarTren();
-                colorActual = COLOR_ACTIVO;
+                visible = true;
             }
             if (siguiente) {
-                caminarHacia(CarreraGomones.POS_INICIO);
+                posActual = CarreraGomones.POS_INICIO;
                 colorActual = COLOR_ESPERA;
+                visible = false;
                 siguiente = carrera.esperarLargada();
                 colorActual = COLOR_ACTIVO;
                 if (siguiente) {
-                    caminarHacia(CarreraGomones.POS_LLEGADA);
                     carrera.cruzarMeta(this.id);
-                    Thread.sleep((int) (Math.random() * 1000));
+                    posActual = CarreraGomones.POS_LLEGADA;
+                    // Si corre la carrera se debe hacer visible antes de volver
+                    visible = true;
                     caminarHacia(CarreraGomones.POS_SALIDA);
+                } else {
+                    // Sino inmediatamente
+                    visible = true;
                 }
                 // Recupera pertenencias
                 carrera.recuperarPertenencias();

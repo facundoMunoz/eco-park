@@ -10,10 +10,12 @@ public class CarreraGomones {
     public static final int GOMONES_NECESARIOS = 12;
     private final int ASIENTOS_TREN = 15;
     private CyclicBarrier largada = new CyclicBarrier(GOMONES_NECESARIOS);
-    private CyclicBarrier viajarTren = new CyclicBarrier(ASIENTOS_TREN);
     private Semaphore bolsoPertenencias = new Semaphore(GOMONES_NECESARIOS, true);
-    private Semaphore asientoTren = new Semaphore(ASIENTOS_TREN, true);
     // Tren
+    private CyclicBarrier subirTren = new CyclicBarrier(ASIENTOS_TREN);
+    private CyclicBarrier bajarTren = new CyclicBarrier(ASIENTOS_TREN + 1);
+    private Semaphore asientoTren = new Semaphore(ASIENTOS_TREN, true);
+    private Semaphore andarTren = new Semaphore(0);
     private int personasTren = 0;
     public static final int MAX_PERSONAS_TREN = 15;
     // Posicion
@@ -23,6 +25,11 @@ public class CarreraGomones {
     public static final Point POS_INICIO = new Point(GUI.WIDTH_ACTIVIDADES + 380, 135);
     public static final Point POS_LLEGADA = new Point(GUI.WIDTH_ACTIVIDADES + 580, 135);
     public static final Point POS_SALIDA = new Point(GUI.WIDTH_ACTIVIDADES + 580, 250);
+
+    public CarreraGomones() {
+        TrenCarrera tren = new TrenCarrera(this);
+        tren.start();
+    }
 
     public boolean esperarLargada() {
         try {
@@ -58,25 +65,43 @@ public class CarreraGomones {
     }
 
     // Tren
+    public void andarTren() {
+        try {
+            andarTren.acquire(1);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    public void llegaTren() {
+        try {
+            bajarTren.await();
+            asientoTren.release(ASIENTOS_TREN);
+        } catch (Exception e) {
+        }
+    }
+
     public boolean subirTren() {
         try {
             asientoTren.acquire(1);
             sumarPersonasTren();
-            viajarTren.await(120, TimeUnit.SECONDS);
+            subirTren.await(120, TimeUnit.SECONDS);
+            bajarTren.await();
             return true;
         } catch (Exception e) {
-            viajarTren.reset();
+            subirTren.reset();
             return false;
         }
     }
 
     private synchronized void sumarPersonasTren() {
         personasTren++;
+        if (personasTren == MAX_PERSONAS_TREN) {
+            andarTren.release(1);
+        }
     }
 
     public synchronized void bajarTren() {
         personasTren--;
-        asientoTren.release(1);
     }
 
     public synchronized int getCantPersonasTren() {
