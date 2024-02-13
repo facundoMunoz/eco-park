@@ -5,13 +5,19 @@ import java.awt.Point;
 
 public class CarreraGomones {
 
+    // Largada
+    private boolean iniciada = true;
     private int gomonesOcupados = 0;
-    private boolean iniciada;
+    // Los gomones necesarios deben ser par
     public static final int GOMONES_NECESARIOS = 12;
-    private final int ASIENTOS_TREN = 15;
-    private CyclicBarrier largada = new CyclicBarrier(GOMONES_NECESARIOS);
+    // Los gomones y las personas deben estar listos
+    private CyclicBarrier largada = new CyclicBarrier(GOMONES_NECESARIOS + (GOMONES_NECESARIOS / 2));
     private Semaphore bolsoPertenencias = new Semaphore(GOMONES_NECESARIOS, true);
+    // Gomones
+    public Gomon gomones[] = new Gomon[GOMONES_NECESARIOS / 2];
+    private Semaphore bajarGomon = new Semaphore(0);
     // Tren
+    private final int ASIENTOS_TREN = 15;
     private CyclicBarrier subirTren = new CyclicBarrier(ASIENTOS_TREN);
     private CyclicBarrier bajarTren = new CyclicBarrier(ASIENTOS_TREN + 1);
     private Semaphore asientoTren = new Semaphore(ASIENTOS_TREN, true);
@@ -28,22 +34,31 @@ public class CarreraGomones {
 
     public CarreraGomones() {
         TrenCarrera tren = new TrenCarrera(this);
+        for (int gomon = 0; gomon < gomones.length; gomon++) {
+            gomones[gomon] = new Gomon(this, gomon);
+            gomones[gomon].start();
+        }
         tren.start();
     }
 
-    public boolean esperarLargada() {
+    public boolean esperarLargada(int nroVisitante) {
+        int gomon = 0;
         try {
             // Deja pertenencias
             bolsoPertenencias.acquire(1);
             dejarPertenencias();
-            largada.await(140, TimeUnit.SECONDS);
-            if (!iniciada) {
-                iniciada = true;
+            // Busca un gomon
+            while (!gomones[gomon].ocuparLugar(nroVisitante)) {
+                gomon++;
             }
+            largada.await(140, TimeUnit.SECONDS);
+            bajarGomon.acquire(1);
             return true;
         } catch (Exception e) {
             largada.reset();
             return false;
+        } finally {
+            gomones[gomon].desocuparLugar(nroVisitante);
         }
     }
 
@@ -52,15 +67,28 @@ public class CarreraGomones {
         gomonesOcupados++;
     }
 
-    public synchronized void cruzarMeta(int numeroVisitante) {
+    public void largarGomon() {
+        try {
+            largada.await();
+        } catch (Exception e) {
+        }
+    }
+
+    public synchronized void cruzarMeta(int numeroGomon) {
         if (iniciada) {
-            System.out.println("¡" + numeroVisitante + " ganó la carrera!");
+            System.out.println(
+                    "¡Gomón " + (numeroGomon + 1) + " con visitantes " + gomones[numeroGomon].getPrimerVisitante() + " y "
+                            + gomones[numeroGomon].getSegundoVisitante() + " ganó la carrera!");
+            bajarGomon.release(GOMONES_NECESARIOS);
             iniciada = false;
         }
     }
 
     public synchronized void recuperarPertenencias() {
         gomonesOcupados--;
+        if (!iniciada) {
+            iniciada = true;
+        }
         bolsoPertenencias.release(1);
     }
 

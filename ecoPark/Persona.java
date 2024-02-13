@@ -133,7 +133,6 @@ public class Persona extends Thread {
         try {
             caminarHacia(CarreraGomones.POS_ENTRADA);
             decisionTransporte = (int) ((Math.random() * 10) % 2);
-            decisionTransporte = 1;
             if (decisionTransporte == 0) {
                 caminarHacia(CarreraGomones.POS_BICIS);
                 caminarHacia(CarreraGomones.POS_INICIO);
@@ -148,10 +147,9 @@ public class Persona extends Thread {
                 posActual = CarreraGomones.POS_INICIO;
                 colorActual = COLOR_ESPERA;
                 visible = false;
-                siguiente = carrera.esperarLargada();
+                siguiente = carrera.esperarLargada(this.id);
                 colorActual = COLOR_ACTIVO;
                 if (siguiente) {
-                    carrera.cruzarMeta(this.id);
                     posActual = CarreraGomones.POS_LLEGADA;
                     // Si corre la carrera se debe hacer visible antes de volver
                     visible = true;

@@ -214,8 +214,16 @@ public class GUI extends JPanel {
         g.fillOval((int) CarreraGomones.POS_INICIO.getX(), (int) CarreraGomones.POS_INICIO.getY(), 10, 10);
         g.setColor(COLOR_TEXTO);
         g.drawString("Inicio (" + carrera.getEsperandoCarrera() + "/" + CarreraGomones.GOMONES_NECESARIOS + ")",
-                (int) CarreraGomones.POS_INICIO.getX() - 16,
-                (int) CarreraGomones.POS_INICIO.getY() - 20);
+        (int) CarreraGomones.POS_INICIO.getX() - 16,
+        (int) CarreraGomones.POS_INICIO.getY() - 20);
+        // Gomones
+        for (Gomon gomon : carrera.gomones) {
+            g.setColor(Gomon.COLOR_GOMON);
+            g.fillOval(gomon.getPosX(), gomon.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
+            g.setColor(COLOR_TEXTO);
+            g.drawOval(gomon.getPosX(), gomon.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
+            g.drawString(gomon.getNro() + 1 + "", gomon.getPosX() + 4, gomon.getPosY() - 2);
+        }
         // Llegada
         g.setColor(COLOR_ELEMENTO);
         g.fillOval((int) CarreraGomones.POS_LLEGADA.getX(), (int) CarreraGomones.POS_LLEGADA.getY(), 10, 10);
@@ -259,7 +267,7 @@ public class GUI extends JPanel {
     private void pintarPersonas(Graphics g) {
         g.setFont(new Font(labelReloj.getFont().getName(), Font.PLAIN, 13));
         for (Persona persona : personas) {
-            if(persona.getVisible()) {
+            if (persona.getVisible()) {
                 // Círculo
                 g.setColor(persona.getColor());
                 g.fillOval(persona.getPosX(), persona.getPosY(), TAM_PERSONAS, TAM_PERSONAS);
