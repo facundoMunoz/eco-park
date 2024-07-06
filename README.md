@@ -1,7 +1,7 @@
 <!-- SUMMARY -->
 <div align="center">
 
-# Escape House
+# Eco Park
 
 Java based desktop app to simulate (using concurrency) a park with different activities following [this assignment](https://drive.google.com/file/d/1gqlGlW4VwnxD9cjiw8ZtB4XGpuEyM4_n/view?usp=sharing)
 
@@ -38,6 +38,10 @@ Java based desktop app to simulate (using concurrency) a park with different act
 ```
 java -jar [latest-version].jar
 ```
+
+### Notes
+
+- See [report](https://github.com/facundoMunoz/eco-pcs-park/blob/main/Informe.pdf)
 
 <!-- CONTACT -->
 ## Contact
