@@ -21,11 +21,11 @@ public class Faro {
     private boolean[] toboganes = new boolean[CANT_TOBOGANES];
     // Posicion
     public static final Point POS_ENTRADA = new Point(250, 400);
-    public static final Point POS_SALIDA = new Point(250, 480);
+    public static final Point POS_SALIDA = new Point(250, 490);
     public static final Point POS_ESCALERAS = new Point(150, 400);
     public static final Point POS_CIMA = new Point(50, 400);
-    public static final Point POS_TOBOGAN_1 = new Point(150, 480);
-    public static final Point POS_TOBOGAN_2 = new Point(50, 480);
+    public static final Point POS_TOBOGAN_1 = new Point(150, 460);
+    public static final Point POS_TOBOGAN_2 = new Point(50, 460);
 
     public Faro() {
         for (int tobogan = 0; tobogan < CANT_TOBOGANES; tobogan++) {
