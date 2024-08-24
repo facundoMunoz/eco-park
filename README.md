@@ -34,7 +34,7 @@ Java based desktop app to simulate (using concurrency) a park with different act
 <!-- USAGE -->
 ## Usage
 
-- Open cmd in the directory where the jar was downloaded and use the following command:
+- Open a Terminal/CMD in the directory where the jar was downloaded and use the following command:
 ```
 java -jar [latest-version].jar
 ```
